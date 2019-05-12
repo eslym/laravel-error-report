@@ -1,0 +1,32 @@
+{
+  "name": "eslym/laravel-error-report",
+  "description": "Better error reports for laravel",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "0nepeop1e",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Eslym\\ErrorReport\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.1",
+    "laravel/framework": ">=5.0 <6.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Eslym\\ErrorReport\\Providers\\ReportServiceProvider"
+      ],
+      "aliases": {
+        "ErrReports": "Eslym\\ErrorReport\\Facades\\ErrReport"
+      }
+    }
+  }
+}
