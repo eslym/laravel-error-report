@@ -7,10 +7,12 @@ composer install eslym/laravel-error-report
 2. Extends the error handler
 3. Include routes for simple error viewer
 4. Schedule cleanup
+
 ```php
 // app/Exceptions/Handler.php
 class Handler extends \Eslym\ErrorReport\ErrorHandler
 ```
+
 ```php
 // routes/web.php
 Route::middleware(['{put your auth middleware here}'])
@@ -18,6 +20,7 @@ Route::middleware(['{put your auth middleware here}'])
         ErrReport::routes();
     });
 ```
+
 ```php
 // app/Console/Kernel.php
 $schedule->command('errors:cleanup')
