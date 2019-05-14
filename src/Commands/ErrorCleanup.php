@@ -40,7 +40,8 @@ class ErrorCleanup extends Command
     public function handle()
     {
         $remove = Carbon::now()->subDays(config('errors.days-keep', 30));
-        ErrorReport::where('created_at', '<', $remove->toDateString());
+        ErrorReport::where('created_at', '<', $remove->toDateString())
+            ->delete();
         return 0;
     }
 }

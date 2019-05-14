@@ -3,12 +3,17 @@
 
 namespace Eslym\ErrorReport\Providers;
 
+use Eslym\ErrorReport\Commands\ErrorCleanup;
 use Illuminate\Support\ServiceProvider;
 
 class ReportServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->commands([
+            ErrorCleanup::class,
+        ]);
+        
         $this->loadTranslationsFrom(
             realpath(__DIR__.'/../../res/lang'),
             'err-reports'
