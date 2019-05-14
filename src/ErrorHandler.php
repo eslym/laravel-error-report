@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ViewErrorBag;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Whoops\Run as Whoops;
 
 class ErrorHandler extends Handler
@@ -36,7 +36,7 @@ class ErrorHandler extends Handler
         $this->report_id = $report->id;
     }
 
-    protected function renderHttpException($e)
+    protected function renderHttpException(HttpException $e)
     {
         $this->registerErrorViewPaths();
 
