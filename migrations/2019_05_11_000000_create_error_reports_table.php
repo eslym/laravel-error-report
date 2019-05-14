@@ -16,6 +16,7 @@ class CreateErrorReportsTable extends Migration
         Schema::create('error_reports', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('class');
+            $table->string('site');
             $table->longText('content');
             $table->boolean('is_console');
             $table->timestamps();

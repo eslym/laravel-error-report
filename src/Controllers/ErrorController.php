@@ -4,6 +4,7 @@
 namespace Eslym\ErrorReport\Controllers;
 
 use Eslym\ErrorReport\Model\ErrorReport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -16,9 +17,15 @@ class ErrorController extends BaseController
     public function list(Request $request){
         $query = ErrorReport::query();
         $search = $request->query('search');
-        $search = str_replace('\\', '\\\\', $search);
-        $search = str_replace('%', '\\%', $search);
-        $query->where('id', 'like', "%$search%");
+        $search = preg_split('/\s+/', $search);
+        foreach ($search as $word){
+            $word = str_replace('\\', '\\\\', $word);
+            $word = str_replace('%', '\\%', $word);
+            $query->where(function(Builder $query) use ($word){
+                $query->where('id', 'like', "%$word%");
+                $query->orWhere('site', 'like', "%$word%");
+            });
+        }
         $query->orderBy('created_at', 'desc');
         $reports = $query->get(['id', 'class', 'is_console', 'created_at']);
         return response()->view('err-reports::list', compact('reports'));

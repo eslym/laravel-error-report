@@ -49,6 +49,7 @@
                     </div>
                     <div class="meta">
                         {{$report->created_at->diffForHumans($now)}}
+                        <div><i>{{$report->site}}</i></div>
                     </div>
                     <div class="description">
                         {{$report->id}}

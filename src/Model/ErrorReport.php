@@ -16,6 +16,7 @@ use Ramsey\Uuid\Uuid;
  *
  * @property string $id
  * @property string $class
+ * @property string $site
  * @property string $content
  * @property boolean $is_console
  * @property Carbon|null $created_at
@@ -38,6 +39,7 @@ class ErrorReport extends Model
         static::creating(function(ErrorReport $report){
             $report->id = Uuid::uuid4()->toString();
             $report->is_console = app()->runningInConsole();
+            $report->site = url();
         });
     }
 }

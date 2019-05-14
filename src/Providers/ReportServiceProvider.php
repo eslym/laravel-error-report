@@ -3,8 +3,7 @@
 
 namespace Eslym\ErrorReport\Providers;
 
-
-use Carbon\Laravel\ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 class ReportServiceProvider extends ServiceProvider
 {
