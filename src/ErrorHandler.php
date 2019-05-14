@@ -36,7 +36,7 @@ class ErrorHandler extends Handler
         $this->report_id = $report->id;
     }
 
-    protected function renderHttpException(HttpExceptionInterface $e)
+    protected function renderHttpException($e)
     {
         $this->registerErrorViewPaths();
 
