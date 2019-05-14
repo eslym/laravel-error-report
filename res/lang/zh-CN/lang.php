@@ -6,4 +6,5 @@ return [
     'report_id' => '报告 ID',
     'details' => '详情',
     'delete' => '删除',
+    'from' => '來自',
 ];

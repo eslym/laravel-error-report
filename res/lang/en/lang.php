@@ -6,4 +6,5 @@ return [
     'report_id' => 'Report ID',
     'details' => 'Details',
     'delete' => 'Delete',
+    'from' => 'From',
 ];

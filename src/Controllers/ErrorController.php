@@ -27,7 +27,7 @@ class ErrorController extends BaseController
             });
         }
         $query->orderBy('created_at', 'desc');
-        $reports = $query->get(['id', 'class', 'is_console', 'created_at']);
+        $reports = $query->get(['id', 'class', 'site', 'is_console', 'created_at']);
         return response()->view('err-reports::list', compact('reports'));
     }
 

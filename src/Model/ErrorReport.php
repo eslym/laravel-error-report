@@ -39,7 +39,7 @@ class ErrorReport extends Model
         static::creating(function(ErrorReport $report){
             $report->id = Uuid::uuid4()->toString();
             $report->is_console = app()->runningInConsole();
-            $report->site = url();
+            $report->site = url('/');
         });
     }
 }
