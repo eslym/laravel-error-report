@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller as BaseController;
 
 class ErrorController extends BaseController
 {
-    public function index(){
-        return response()->view('err-reports::index');
+    public function index(Request $request){
+        return response()->view('err-reports::index', ['query' => http_build_query($request->query->all())]);
     }
 
     public function list(Request $request){
@@ -28,8 +28,11 @@ class ErrorController extends BaseController
             });
         }
         $query->orderBy('created_at', 'desc');
-        $reports = $query->get(['id', 'class', 'site', 'is_console', 'created_at']);
-        return response()->view('err-reports::list', compact('reports'));
+        $reports = $query->paginate(15, ['id', 'class', 'site', 'is_console', 'created_at']);
+        $reports->appends($request->query->all());
+        $reports->withPath(route('err-reports::index'));
+        $query = http_build_query($request->query->all());
+        return response()->view('err-reports::list', compact('reports', 'query'));
     }
 
     public function view($report){
@@ -37,9 +40,9 @@ class ErrorController extends BaseController
         return response($report->content, 200);
     }
 
-    public function delete($report){
+    public function delete(Request $request, $report){
         $report = ErrorReport::findOrFail($report, ['id']);
         $report->delete();
-        return redirect()->route('err-reports::index');
+        return redirect()->route('err-reports::index', $request->query->all());
     }
 }

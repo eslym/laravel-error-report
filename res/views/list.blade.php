@@ -18,12 +18,12 @@
             z-index: 9000;
         }
         body > div{
-            padding: 150px 20px 20px;
+            padding: 200px 20px 20px;
         }
     </style>
 </head>
 <body>
-<form class="ui form" id="search-form">
+<form class="ui form" id="search-form" target="_top" action="{{route('err-reports::index')}}">
     <div class="field">
         <label for="search">{{__('err-reports::lang.search')}}</label>
         <div class="ui fluid icon input">
@@ -34,6 +34,7 @@
     <script>
         $('.link.icon').change(()=>{$('#search-form').submit();});
     </script>
+    {!! $reports->links('err-reports::paginator') !!}
 </form>
 <div>
     <div class="ui cards">
@@ -62,7 +63,7 @@
                         <a class="ui basic green button" href="{{route('err-reports::view', ['report'=>$report->id])}}" target="details-view">
                             {{__('err-reports::lang.details')}}
                         </a>
-                        <a class="ui basic red button" href="{{route('err-reports::delete', ['report'=>$report->id])}}" target="_top">
+                        <a class="ui basic red button" href="{{route('err-reports::delete', ['report'=>$report->id])}}?{{$query}}" target="_top">
                             {{__('err-reports::lang.delete')}}
                         </a>
                     </div>

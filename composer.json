@@ -25,7 +25,7 @@
         "Eslym\\ErrorReport\\Providers\\ReportServiceProvider"
       ],
       "aliases": {
-        "ErrReports": "Eslym\\ErrorReport\\Facades\\ErrReport"
+        "ErrReport": "Eslym\\ErrorReport\\Facades\\ErrReport"
       }
     }
   }
