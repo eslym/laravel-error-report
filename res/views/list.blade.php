@@ -32,7 +32,7 @@
         </div>
     </div>
     <script>
-        $('.link.icon').change(()=>{$('#search-form').submit();});
+        $('.link.icon').click(()=>{$('#search-form').submit();});
     </script>
     {!! $reports->links('err-reports::paginator') !!}
 </form>
