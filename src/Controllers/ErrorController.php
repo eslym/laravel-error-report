@@ -23,6 +23,7 @@ class ErrorController extends BaseController
             $word = str_replace('%', '\\%', $word);
             $query->where(function(Builder $query) use ($word){
                 $query->where('id', 'like', "%$word%");
+                $query->orWhere('class', 'like', "%$word%");
                 $query->orWhere('site', 'like', "%$word%");
             });
         }
@@ -36,7 +37,8 @@ class ErrorController extends BaseController
         return response($report->content, 200);
     }
 
-    public function delete(ErrorReport $report){
+    public function delete($report){
+        $report = ErrorReport::findOrFail($report, ['id']);
         $report->delete();
         return redirect()->route('err-reports::index');
     }
