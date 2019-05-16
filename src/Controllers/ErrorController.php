@@ -31,7 +31,8 @@ class ErrorController extends BaseController
         return response()->view('err-reports::list', compact('reports'));
     }
 
-    public function view(ErrorReport $report){
+    public function view($report){
+        $report = ErrorReport::findOrFail($report, ['content']);
         return response($report->content, 200);
     }
 
