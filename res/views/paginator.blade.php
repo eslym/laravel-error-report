@@ -5,9 +5,9 @@
     <a class="icon item" @if($paginator->currentPage() > 1) href="{{$paginator->previousPageUrl()}}" target="_top" @endif>
         <i class="angle left icon"></i>
     </a>
-    @php($start = min($paginator->currentPage() - 2, $paginator->lastPage() - 4))
+    @php($start = min($paginator->currentPage() - 2, $paginator->lastPage() - 2))
     @php($start = $start < 1 ? 1 : $start)
-    @php($end = min($start + 4, $paginator->lastPage()))
+    @php($end = min($start + 2, $paginator->lastPage()))
     @while($start <= $end)
         @if($start == $paginator->currentPage())
             <a class="item active">{{$start}}</a>
