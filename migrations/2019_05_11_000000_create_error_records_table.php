@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateErrorReportsTable extends Migration
+class CreateErrorRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateErrorReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('error_reports', function (Blueprint $table) {
+        Schema::create('error_records', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('class');
             $table->string('site');
-            $table->longText('content');
+            $table->text('hash');
             $table->boolean('is_console');
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ class CreateErrorReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('error_reports');
+        Schema::dropIfExists('error_records');
     }
 }

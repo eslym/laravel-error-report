@@ -17,7 +17,11 @@
   },
   "require": {
     "php": ">=7.1",
-    "laravel/framework": ">=5.0 <6.0"
+    "laravel/framework": ">=5.0 <6.0",
+    "filp/whoops": "^2.2@dev",
+    "ext-json": "*",
+    "yajra/laravel-datatables-oracle": "~9.0",
+    "yajra/laravel-datatables-html": "^4.0"
   },
   "extra": {
     "laravel": {

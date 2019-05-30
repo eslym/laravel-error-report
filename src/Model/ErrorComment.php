@@ -7,10 +7,9 @@ namespace Eslym\ErrorReport\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
 
 /**
- * Class ErrorReport
+ * Class ErrorComment
  * @package Model
  *
  * @property string $id
@@ -21,19 +20,9 @@ use Ramsey\Uuid\Uuid;
  *
  * @mixin Builder
  */
-class ErrorReport extends Model
+class ErrorComment extends Model
 {
-    public $incrementing = false;
-
     protected $fillable = [
-        'error_id', 'content'
+        'error_id', 'content', 'email'
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function(ErrorReport $report){
-            $report->id = Uuid::uuid4()->toString();
-        });
-    }
 }
