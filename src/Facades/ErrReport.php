@@ -6,7 +6,6 @@ namespace Eslym\ErrorReport\Facades;
 
 use Carbon\Carbon;
 use Eslym\ErrorReport\Model\ErrorRecord;
-use Illuminate\Http\Middleware\SetCacheHeaders;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Throwable;

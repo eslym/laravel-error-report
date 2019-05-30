@@ -13,48 +13,7 @@ use Yajra\DataTables\Html\Builder;
 class ErrorController extends BaseController
 {
     public function list(Request $request, Builder $html){
-        $columns = collect([
-            [
-                "data" => "id",
-                "name" => "id",
-                "title" => "Id",
-                "orderable" => true,
-                "searchable" => true,
-                "attributes" => [],
-            ],
-            [
-                "data" => "site",
-                "name" => "site",
-                "title" => "Site",
-                "orderable" => true,
-                "searchable" => true,
-                "attributes" => [],
-            ],
-            [
-                "data" => "class",
-                "name" => "class",
-                "title" => "Class",
-                "orderable" => true,
-                "searchable" => true,
-                "attributes" => [],
-            ],
-            [
-                "data" => "created_at",
-                "name" => "created_at",
-                "title" => "Created At",
-                "orderable" => true,
-                "searchable" => true,
-                "attributes" => [],
-            ],
-            [
-                "data" => "is_console",
-                "name" => "is_console",
-                "title" => "Environment",
-                "orderable" => true,
-                "searchable" => true,
-                "attributes" => [],
-            ]
-        ]);
+        $columns = $this->columns();
 
         if ($request->ajax()) {
             return Datatables::eloquent(ErrorRecord::select($columns->pluck('data')->toArray()))
@@ -62,17 +21,45 @@ class ErrorController extends BaseController
         }
 
         $html->columns($columns->toArray());
+        $html->orderBy(1, 'desc');
 
         return response()->view('err-reports::list', compact('html'));
     }
 
-    public function view($report){
-        return response($report->content, 200);
-    }
-
-    public function delete(Request $request, $report){
-        $report = ErrorRecord::findOrFail($report, ['id']);
-        $report->delete();
-        return redirect()->route('err-reports::index', $request->query->all());
+    public function columns(){
+        return collect([
+            [
+                "data" => "is_console",
+                "name" => "is_console",
+                "title" => '',
+                "orderable" => false,
+                'searchable' => false,
+                'render' => '()=>{return data == "1" ? "<i class=\'ui terminal icon\'></i>" : "<i class=\'ui file alternate outline icon\'></i>";}',
+            ],
+            [
+                "data" => "created_at",
+                "name" => "created_at",
+                "title" => __('err-reports::datatables.created_at'),
+                "footer" => '<div class="ui mini fluid input"><input placeholder="'.e(__('err-reports::datatables.created_at')).'"/></div>',
+            ],
+            [
+                "data" => "id",
+                "name" => "id",
+                "title" =>__('err-reports::datatables.id'),
+                "footer" => '<div class="ui mini fluid input"><input placeholder="'.e(__('err-reports::datatables.id')).'"/></div>',
+            ],
+            [
+                "data" => "site",
+                "name" => "site",
+                "title" => __('err-reports::datatables.site'),
+                "footer" => '<div class="ui mini fluid input"><input placeholder="'.e(__('err-reports::datatables.site')).'"/></div>',
+            ],
+            [
+                "data" => "class",
+                "name" => "class",
+                "title" => __('err-reports::datatables.class'),
+                "footer" => '<div class="ui mini fluid input"><input placeholder="'.e(__('err-reports::datatables.class')).'"/></div>',
+            ]
+        ]);
     }
 }
