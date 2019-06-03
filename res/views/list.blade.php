@@ -182,7 +182,7 @@
 </div>
 {!! $html->table([], true, false) !!}
 {!! $html->scripts() !!}
-<div class="ui basic tiny modal" id="deleteModal">
+<div class="ui tiny modal" id="deleteModal">
     <div class="ui icon header">
         <i class="trash alternate icon"></i>
         {{ __('err-reports::lang.delete.title') }}
@@ -191,11 +191,11 @@
         <p>{!! __('err-reports::lang.delete.message', ['id' => '<code class="id"></code>']) !!}</p>
     </div>
     <div class="actions">
-        <div class="ui red basic cancel inverted button">
+        <div class="ui red inverted cancel inverted button">
             <i class="remove icon"></i>
             {{ __('err-reports::lang.no') }}
         </div>
-        <div class="ui green ok inverted button">
+        <div class="ui green ok button">
             <i class="checkmark icon"></i>
             {{ __('err-reports::lang.yes') }}
         </div>
