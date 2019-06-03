@@ -182,9 +182,9 @@
 </div>
 {!! $html->table([], true, false) !!}
 {!! $html->scripts() !!}
-<div class="ui basic mini modal" id="deleteModal">
+<div class="ui basic tiny modal" id="deleteModal">
     <div class="ui icon header">
-        <i class="trash alternative icon"></i>
+        <i class="trash alternate icon"></i>
         {{ __('err-reports::lang.delete.title') }}
     </div>
     <div class="content">
