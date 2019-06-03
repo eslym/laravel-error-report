@@ -15,8 +15,6 @@ use Yajra\DataTables\Html\Builder as HtmlBuilder;
 class ErrorController extends BaseController
 {
     public function list(Request $request, HtmlBuilder $html){
-        app()->setLocale('zh-CN');
-
         $columns = $this->columns();
 
         if ($request->ajax()) {
@@ -130,7 +128,7 @@ class ErrorController extends BaseController
     }
 
     protected function filterNumber(Builder $query, $column, $keyword, $method = 'where'){
-        if(preg_match('/^\s*(<>|<|>|=|!=)\s*(\d+)\s*$/', $keyword, $matches)){
+        if(preg_match('/^\s*(<>|<=?|>=?|!?=)\s*(\d+)\s*$/', $keyword, $matches)){
             call_user_func([$query, $method], $column, $matches[1], $matches[2]);
             return;
         }
@@ -138,6 +136,7 @@ class ErrorController extends BaseController
             call_user_func([$query, $method.'Between'], $column, [$matches[1], $matches[2]]);
             return;
         }
+        $keyword = str_replace('\\', '\\\\', $keyword);
         $keyword = str_replace('%', '\%', $keyword);
         call_user_func([$query, $method], $column, 'LIKE', "%$keyword%");
     }

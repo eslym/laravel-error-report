@@ -188,7 +188,7 @@
         {{ __('err-reports::lang.delete.title') }}
     </div>
     <div class="content">
-        <p>{!! __('err-reports::lang.delete.message', ['id' => '<span class="id"></span>']) !!}</p>
+        <p>{!! __('err-reports::lang.delete.message', ['id' => '<code class="id"></code>']) !!}</p>
     </div>
     <div class="actions">
         <div class="ui red basic cancel inverted button">
@@ -221,7 +221,7 @@
     $('#dataTableBuilder').on('click', 'button[data-action=delete]', function(){
         let modal = $('#deleteModal')
             .attr('data-id', $(this).data('id'));
-        modal.find('span.id')
+        modal.find('code.id')
             .text($(this).data('id'));
         modal.modal('show');
     });
