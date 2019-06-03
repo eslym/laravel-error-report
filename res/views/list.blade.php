@@ -168,7 +168,7 @@
         <div class="ui selection compact dropdown" id="len">
             <input type="hidden" name="len">
             <i class="dropdown icon"></i>
-            <div class="default text">10</div>
+            <div class="text">10</div>
             <div class="menu">
                 <div class="item" data-value="10">10</div>
                 <div class="item" data-value="20">20</div>
