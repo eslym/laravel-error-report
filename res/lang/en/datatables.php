@@ -5,6 +5,8 @@ return [
     'site' => 'Site',
     'class' => 'Error Type',
     'created_at' => 'Report Time',
+    'counter' => 'Error Count',
+    'comments' => 'Comment Count',
     'languages' => [
         'decimal' => '',
         'emptyTable' => 'No data available in table',

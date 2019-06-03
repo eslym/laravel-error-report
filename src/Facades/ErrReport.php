@@ -37,6 +37,8 @@ class ErrReport
             'is_console' => app()->runningInConsole(),
         ]);
 
+        $record->increment('counter');
+
         if (!app()->runningInConsole()) {
             session()->put('report_id', $record->id);
         }

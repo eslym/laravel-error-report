@@ -18,6 +18,7 @@ use Ramsey\Uuid\Uuid;
  * @property string $class
  * @property string $site
  * @property string $content
+ * @property int $counter
  * @property boolean $is_console
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

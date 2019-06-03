@@ -10,42 +10,40 @@
     <script src="https://cdn.datatables.net/1.10.18/js/dataTables.semanticui.min.js" integrity="sha384-5IYbSnFd6TeNKhOf8CO6LuJpN4IuBiaYwOsPv7CQsbF8sctyVeh7GU3OlfvFBW6n" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" integrity="sha384-utW62Q5udTycRsqDMdQwjeaKASTAE2cf20juuz5yfC1n1hu8gBJ1Pn0oEzKIb8Gd" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.semanticui.min.js" integrity="sha384-fcF9eJURpHYoXg4EOQUt585TNKVmiahNP9nHmn0sgDvGd69x94o9IUheOiDsmeHc" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js" integrity="sha384-e/L88frG01/c0HybKKVKr3UAZP3l78l0013aBen/0iP4jkA/koXYOWSQ7YP2bETZ" crossorigin="anonymous"></script>
     <style>
         table.responsive{
             width: 100% !important;
         }
     </style>
     <script>
+        jQuery.el = function (el){
+            return $(document.createElement(el));
+        };
         function drawAction(data,type,full,meta) {
-            return $(document.createElement('div')).append(
-                $(document.createElement('div'))
+            return $.el('div').append(
+                $.el('div')
                     .data('id', full.id)
                     .addClass('ui tiny icon buttons')
                     .append(
-                        $(document.createElement('button'))
+                        $.el('button')
                             .append(
-                                $(document.createElement('i'))
-                                    .addClass('eye icon')
-                            ).addClass('ui green button')
-                    ).append(
-                        $(document.createElement('button'))
+                                $.el('i')
+                                    .addClass('eye icon'))
+                            .attr('data-action', 'view')
+                            .attr('data-id', full.id)
+                            .addClass('ui green button'))
+                    .append(
+                        $.el('button')
                             .append(
-                                $(document.createElement('i'))
-                                    .addClass('comment icon')
-                            ).addClass('ui blue button')
-                    ).append(
-                        $(document.createElement('button'))
-                            .append(
-                                $(document.createElement('i'))
-                                    .addClass('trash icon')
-                            ).addClass('ui red button')
-                    )
+                                $.el('i')
+                                    .addClass('trash icon'))
+                            .attr('data-action', 'delete')
+                            .attr('data-id', full.id)
+                            .addClass('ui red button'))
             ).html();
         }
 
-        $.fn.dataTable.ext.classes.sProcessing = "dataTables_processing ui dimmer text loader";
-        $.fn.dataTable.defaults.dom = "<'ui basic segment'r<'ui stackable grid'<'row'<'eight wide column'l><'right aligned eight wide column'f>><'row dt-table'<'sixteen wide column't>><'row'<'seven wide column'i><'right aligned nine wide column'p>>>>";
+        $.fn.dataTable.defaults.dom = "<'ui basic segment'<'ui stackable grid'<'row dt-table'<'sixteen wide column'tr>><'row'<'seven wide column'i><'right aligned nine wide column'p>>>>";
 
         /* Bootstrap paging button renderer */
         $.fn.dataTable.ext.renderer.pageButton.semanticUI = function ( settings, host, idx, buttons, page, pages ) {
@@ -164,8 +162,45 @@
     </script>
 </head>
 <body>
+<div class="ui basic segment">
+    <div class="ui form">
+        {{ \Illuminate\Support\Str::before(__('err-reports::datatables.languages.lengthMenu'), '_MENU_') }}
+        <div class="ui selection compact dropdown" id="len">
+            <input type="hidden" name="len">
+            <i class="dropdown icon"></i>
+            <div class="default text">10</div>
+            <div class="menu">
+                <div class="item" data-value="10">10</div>
+                <div class="item" data-value="20">20</div>
+                <div class="item" data-value="30">30</div>
+                <div class="item" data-value="40">40</div>
+                <div class="item" data-value="50">50</div>
+            </div>
+        </div>
+        {{ \Illuminate\Support\Str::after(__('err-reports::datatables.languages.lengthMenu'), '_MENU_') }}
+    </div>
+</div>
 {!! $html->table([], true, false) !!}
 {!! $html->scripts() !!}
+<div class="ui basic mini modal" id="deleteModal">
+    <div class="ui icon header">
+        <i class="trash alternative icon"></i>
+        {{ __('err-reports::lang.delete.title') }}
+    </div>
+    <div class="content">
+        <p>{!! __('err-reports::lang.delete.message', ['id' => '<span class="id"></span>']) !!}</p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+            {{ __('err-reports::lang.no') }}
+        </div>
+        <div class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            {{ __('err-reports::lang.yes') }}
+        </div>
+    </div>
+</div>
 <script>
     LaravelDataTables.dataTableBuilder.columns().every(function () {
         let col = this;
@@ -173,10 +208,34 @@
         this.draw();
         $('input', this.footer()).on('keyup change', function () {
             if (col.search() !== this.value) {
-                col.search(this.value)
-                    .draw();
+                col.search(this.value).draw();
             }
         });
+    });
+    let len = $('#len.dropdown').dropdown({
+        onChange: (value)=>{
+            LaravelDataTables.dataTableBuilder.page.len(value).draw();
+        }
+    }).find('input').val();
+    LaravelDataTables.dataTableBuilder.page.len(len);
+    $('#dataTableBuilder').on('click', 'button[data-action=delete]', function(){
+        let modal = $('#deleteModal')
+            .attr('data-id', $(this).data('id'));
+        modal.find('span.id')
+            .text($(this).data('id'));
+        modal.modal('show');
+    });
+    $('#deleteModal').modal({
+        approve: 'button.ok',
+        cancel: 'button.cancel',
+        onApprove: function(){
+            $.getJSON(window.location, {
+                action: 'delete',
+                id: $(this).data('id')
+            }, function () {
+                LaravelDataTables.dataTableBuilder.draw();
+            })
+        }
     });
 </script>
 </body>

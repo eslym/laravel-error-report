@@ -2,9 +2,10 @@
 
 return [
     'title' => '錯誤報告',
-    'search' => '搜索',
-    'report_id' => '報告 ID',
-    'details' => '詳情',
-    'delete' => '刪除',
-    'from' => '來自',
+    'delete' => [
+        'title' => '你確定嗎？',
+        'message' => '你正將刪除錯誤報告 :id ，此操作並不可逆。',
+    ],
+    'yes' => '是',
+    'no' => '否',
 ];

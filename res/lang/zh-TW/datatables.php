@@ -5,6 +5,8 @@ return [
     'site' => '站點',
     'class' => '報錯種類',
     'created_at' => '報錯時間',
+    'counter' => '报错次数',
+    'comments' => '评论次数',
     'languages' => [
         'decimal' => '',
         'emptyTable' => '沒有報錯記錄。',
