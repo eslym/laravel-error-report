@@ -23,8 +23,8 @@ composer install eslym/laravel-error-report
 ```php
 // routes/web.php
 Route::middleware(['{put your auth middleware here}'])
-    ->group(function(){
-        ErrReport::routes();
+    ->group(function($router){
+        ErrReport::routes($router);
     });
 ```
 
