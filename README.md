@@ -1,6 +1,6 @@
 # Better Error Reports for Laravel
 ```bash
-composer install eslym/laravel-error-report
+composer install eslym/laravel-error-report ^2.0
 ```
 ## Usage
 1. Migrate database
