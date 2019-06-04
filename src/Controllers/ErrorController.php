@@ -3,20 +3,18 @@
 
 namespace Eslym\ErrorReport\Controllers;
 
+use Eslym\ErrorReport\Model\ErrorComment;
 use Eslym\ErrorReport\Model\ErrorRecord;
+use Eslym\ErrorReport\Model\ErrorReport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
 class ErrorController extends BaseController
 {
-    public function list(Request $request, HtmlBuilder $html){
-        $columns = $this->columns();
-
+    public function list(Request $request){
         if ($request->ajax()) {
             switch ($request->query->get('action')){
                 case 'delete':
@@ -28,11 +26,22 @@ class ErrorController extends BaseController
                     return response()->json([
                         'reports' => $record
                             ->reports()
-                            ->get(['id', 'created_at']),
+                            ->get(['id', 'created_at'])->map(function(ErrorReport $report){
+                                return [
+                                    'id' => $report->id,
+                                    'created_at' => $report->created_at->diffForHumans(),
+                                ];
+                            }),
                         'comments' => $record
                             ->comments()
                             ->orderByDesc('created_at')
-                            ->get(['email', 'created_at', 'content'])
+                            ->get(['email', 'created_at', 'content'])->map(function(ErrorComment $comment){
+                                return [
+                                    'email' => $comment->email,
+                                    'content' => $comment->content,
+                                    'created_at' => $comment->created_at->diffForHumans(),
+                                ];
+                            }),
                     ]);
                 default:
                     $query = ErrorRecord::query()
@@ -43,11 +52,10 @@ class ErrorController extends BaseController
                             DB::raw('COUNT(c.id) AS comments')
                         ]);
 
-                    $comments_index = $columns->pluck('data')
-                        ->search('comments');
-
-                    if(!empty($search = $request->input("columns.$comments_index.search.value"))){
-                        $this->filterNumber($query, 'comments', $search, 'having');
+                    foreach ($request->input('columns', []) as $col){
+                        if($col['data'] == 'comments' && !empty($search = $col['search']['value'])){
+                            $this->filterNumber($query, 'comments', $search, 'having');
+                        }
                     }
 
                     return Datatables::eloquent($query)
@@ -59,72 +67,13 @@ class ErrorController extends BaseController
                         ->make(true);
             }
         }
-
-        $html->columns($columns->toArray());
-        $html->addAction([
-            'title' => '',
-            'render' => '()=>{return drawAction(data,type,full,meta)}',
-            'className' => 'collapsing',
-        ]);
-        $html->orderBy(1, 'desc');
-
-        $html->addTableClass(['ui', 'small', 'definition', 'celled', 'table', 'responsive', 'nowrap', 'unstackable']);
-        $html->parameters([
-            'responsive' => true,
-            'language' => __('err-reports::datatables.languages'),
-        ]);
-
-        return response()->view('err-reports::list', compact('html'));
-    }
-
-    protected function columns(){
-        return collect([
-            [
-                "data" => "is_console",
-                "name" => "is_console",
-                "title" => '',
-                "orderable" => false,
-                'searchable' => false,
-                'render' => '()=>{return data == "1" ? "<i class=\'ui terminal icon\'></i>" : "<i class=\'ui file alternate outline icon\'></i>";}',
-                'className' => 'collapsing',
-            ],
-            [
-                "data" => "created_at",
-                "name" => "created_at",
-                "title" => __('err-reports::datatables.created_at'),
-                "footer" => '<div class="ui fluid transparent input"><input placeholder="'.e(__('err-reports::datatables.created_at')).'"/></div>',
-            ],
-            [
-                "data" => "id",
-                "name" => "id",
-                "title" =>__('err-reports::datatables.id'),
-                "footer" => '<div class="ui fluid transparent input"><input placeholder="'.e(__('err-reports::datatables.id')).'"/></div>',
-            ],
-            [
-                "data" => "site",
-                "name" => "site",
-                "title" => __('err-reports::datatables.site'),
-                "footer" => '<div class="ui fluid transparent input"><input placeholder="'.e(__('err-reports::datatables.site')).'"/></div>',
-            ],
-            [
-                "data" => "class",
-                "name" => "class",
-                "title" => __('err-reports::datatables.class'),
-                "footer" => '<div class="ui fluid transparent input"><input placeholder="'.e(__('err-reports::datatables.class')).'"/></div>',
-            ],
-            [
-                "data" => "counter",
-                "name" => "counter",
-                "title" => __('err-reports::datatables.counter'),
-                "footer" => '<div class="ui fluid transparent input"><input placeholder="'.e(__('err-reports::datatables.counter')).'"/></div>',
-            ],
-            [
-                "data" => "comments",
-                "name" => "comments",
-                "title" => __('err-reports::datatables.comments'),
-                "footer" => '<div class="ui fluid transparent input"><input placeholder="'.e(__('err-reports::datatables.comments')).'"/></div>',
-            ]
-        ]);
+        switch ($request->query->get('action')){
+            case 'download':
+                $report = ErrorReport::findOrFail($request->query->get('id'));
+                return response($report->content);
+            default:
+                return response()->view('err-reports::list');
+        }
     }
 
     protected function filterNumber(Builder $query, $column, $keyword, $method = 'where'){

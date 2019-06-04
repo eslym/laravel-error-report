@@ -4,7 +4,8 @@ return [
     'id' => 'Report ID',
     'site' => 'Site',
     'class' => 'Error Type',
-    'created_at' => 'Report Time',
+    'created_at' => 'First Seen',
+    'updated_at' => 'Last Seen',
     'counter' => 'Error Count',
     'comments' => 'Comment Count',
     'languages' => [

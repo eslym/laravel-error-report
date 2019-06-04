@@ -4,7 +4,8 @@ return [
     'id' => '報告 ID',
     'site' => '站點',
     'class' => '報錯種類',
-    'created_at' => '報錯時間',
+    'created_at' => '最初報錯',
+    'updated_at' => '最後報錯',
     'counter' => '报错次数',
     'comments' => '评论次数',
     'languages' => [
