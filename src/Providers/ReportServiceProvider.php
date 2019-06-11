@@ -13,11 +13,7 @@ class ReportServiceProvider extends ServiceProvider
         $this->commands([
             ErrorCleanup::class,
         ]);
-        
-        $this->loadTranslationsFrom(
-            realpath(__DIR__.'/../../res/lang'),
-            'err-reports'
-        );
+
         $this->loadViewsFrom(
             realpath(__DIR__.'/../../res/views'),
             'err-reports'
