@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use Yajra\DataTables\Facades\DataTables;
 
 class ErrorController extends BaseController
@@ -20,7 +21,7 @@ class ErrorController extends BaseController
                 case 'delete':
                     ErrorRecord::findOrFail($request->query->get('id'))
                         ->delete();
-                    return response()->json('success');
+                    return Response::json('success');
                 case 'view':
                     $record = ErrorRecord::findOrFail($request->query->get('id'));
                     return response()->json([
@@ -70,9 +71,9 @@ class ErrorController extends BaseController
         switch ($request->query->get('action')){
             case 'download':
                 $report = ErrorReport::findOrFail($request->query->get('id'));
-                return response($report->content);
+                return Response::download($report->content, $report->id.'.html');
             default:
-                return response()->view('err-reports::list');
+                return Response::view('err-reports::list');
         }
     }
 
