@@ -5,6 +5,7 @@ namespace Eslym\ErrorReport\Commands;
 use Carbon\Carbon;
 use Eslym\ErrorReport\Model\ErrorRecord;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 
 class ErrorCleanup extends Command
 {
@@ -39,8 +40,8 @@ class ErrorCleanup extends Command
      */
     public function handle()
     {
-        $remove = Carbon::now()->subDays(config('errors.days-keep', env('ERRORS_DAYS_KEEP', 30)));
-        ErrorRecord::where('created_at', '<', $remove->toDateString())
+        $remove = Carbon::now()->subDays(Config::get('errors.days-keep', env('ERRORS_DAYS_KEEP', 30)));
+        ErrorRecord::where('updated_at', '<', $remove->toDateString())
             ->delete();
         return 0;
     }
