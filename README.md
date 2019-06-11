@@ -14,7 +14,7 @@ composer install eslym/laravel-error-report ^2.0
     public function report(Exception $exception)
     {
         if($this->shouldReport($exception)){
-            ErrReport::report($exception);
+            \Eslym\ErrorReport\Facades\Reporter::report($exception);
         }
     }
 ...
@@ -24,7 +24,7 @@ composer install eslym/laravel-error-report ^2.0
 // routes/web.php
 Route::middleware(['{put your auth middleware here}'])
     ->group(function($router){
-        ErrReport::routes($router);
+        Reporter::routes($router);
     });
 ```
 
