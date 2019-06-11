@@ -4,6 +4,7 @@
 namespace Eslym\ErrorReport\Providers;
 
 use Eslym\ErrorReport\Commands\ErrorCleanup;
+use Eslym\ErrorReport\Tools\Reporter;
 use Illuminate\Support\ServiceProvider;
 
 class ReportServiceProvider extends ServiceProvider
@@ -13,7 +14,7 @@ class ReportServiceProvider extends ServiceProvider
         $this->commands([
             ErrorCleanup::class,
         ]);
-
+        $this->app->singleton(Reporter::class);
         $this->loadViewsFrom(
             realpath(__DIR__.'/../../res/views'),
             'err-reports'

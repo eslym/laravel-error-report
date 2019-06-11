@@ -8,9 +8,7 @@ use Carbon\Carbon;
 use Eslym\ErrorReport\Model\ErrorRecord;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Throwable;
 use Whoops\Handler\PrettyPageHandler;
@@ -23,7 +21,10 @@ class Reporter
      */
     protected $router;
 
-    protected $app;
+    public function __construct(Router $router)
+    {
+        $this->router = $router;
+    }
 
     public function routes(Router $router = null){
         $router = $router ?? $this->router;
@@ -50,19 +51,15 @@ class Reporter
 
         $record->increment('counter');
 
-        if (!$record->is_console) {
-            Session::put('report_id', $record->id);
-        }
-
         $max_sample = Config::get('errors.max-sample', env('ERRORS_MAX_SAMPLE', 10));
         if ( $record->reports()->count() >= $max_sample) {
-            return;
+            return $record->id;
         }
 
         $sample_interval = Config::get('errors.sample-delay', env('ERRORS_SAMPLE_DELAY', 10));
         $last_report = $record->reports()->orderByDesc('created_at')->first();
         if ($last_report && $last_report->created_at->gt(Carbon::now()->subMinutes($sample_interval))) {
-            return;
+            return $record->id;
         }
 
         $handler = new PrettyPageHandler();
@@ -78,6 +75,7 @@ class Reporter
         $record->reports()->make([
             'content' => $content,
         ])->save();
+        return $record->id;
     }
 
     public function runningInConsole()

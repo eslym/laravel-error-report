@@ -71,7 +71,10 @@ class ErrorController extends BaseController
         switch ($request->query->get('action')){
             case 'download':
                 $report = ErrorReport::findOrFail($request->query->get('id'));
-                return Response::download($report->content, $report->id.'.html');
+                return Response::make($report->content, 200, [
+                    'Content-Type' => 'text/html; charset=utf-8',
+                    'Content-Deposition' => "attachment; filename=\"$report->id.html\""
+                ]);
             default:
                 return Response::view('err-reports::list');
         }
