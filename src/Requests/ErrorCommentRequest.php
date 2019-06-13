@@ -27,7 +27,7 @@ class ErrorCommentRequest extends FormRequest
         return [
             'error_id' => 'required|exists:error_records,id',
             'email' => 'email',
-            'content' => 'required|string|size:10,1000',
+            'content' => 'required|string|min:10|max:1000',
         ];
     }
 
