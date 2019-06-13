@@ -32,7 +32,7 @@ class ErrorCommentRequest extends FormRequest
     }
 
     public function commit(){
-        $data = $this->only(['error_id', 'email', 'content']);
+        $data = $this->validated();
         if(isset($data['email']) && empty($data['email'])){
             $data['email'] = null;
         }
