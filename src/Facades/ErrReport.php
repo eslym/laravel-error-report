@@ -13,7 +13,6 @@ use Throwable;
  * Class ErrReport
  * @deprecated
  * @package Eslym\ErrorReport\Facades
- * @method static void routes(Router $router = null)
  * @method static string report(Throwable $exception)
  */
 class ErrReport extends Facade

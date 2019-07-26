@@ -26,17 +26,6 @@ class Reporter
         $this->router = $router;
     }
 
-    public function routes(Router $router = null){
-        $router = $router ?? $this->router;
-        $router->namespace('\\Eslym\\ErrorReport\\Controllers')
-            ->prefix('errors')
-            ->name('err-reports::')
-            ->group(function(Router $router){
-                $router->get('/', 'ErrorController@list')
-                    ->name('list');
-            });
-    }
-
     public function report(Throwable $exception){
         $trace = json_encode(collect($exception->getTrace())->map(function ($trace){
             return Arr::except($trace, ['args']);

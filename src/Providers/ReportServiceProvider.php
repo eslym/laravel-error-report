@@ -15,10 +15,6 @@ class ReportServiceProvider extends ServiceProvider
             ErrorCleanup::class,
         ]);
         $this->app->singleton(Reporter::class);
-        $this->loadViewsFrom(
-            realpath(__DIR__.'/../../res/views'),
-            'err-reports'
-        );
         $this->loadMigrationsFrom(
             realpath(__DIR__.'/../../migrations')
         );

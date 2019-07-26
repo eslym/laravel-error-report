@@ -12,7 +12,6 @@ use Throwable;
 /**
  * Class Reporter
  * @package Eslym\ErrorReport\Facades
- * @method static void routes(Router $router = null)
  * @method static string report(Throwable $exception)
  */
 class Reporter extends Facade
